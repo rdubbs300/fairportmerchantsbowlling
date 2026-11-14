@@ -1,0 +1,14 @@
+---
+layout: base.njk
+title: 300 Club
+---
+<h1 class="page-h">300 Club</h1>
+<p class="page-sub">Every perfect game in the {{ league.meta.season }} season.</p>
+{% set club = league.insights.s300 %}
+{% if club.length %}
+<div class="club">
+{% for x in club %}<div class="c"><span class="cat c300">300</span><b><a class="tl" href="/stats/#bowler-{{ x.n | slug2 }}">{{ x.n }}</a></b><span class="muted">{{ x.t }} · week {{ x.wk }}</span></div>{% endfor %}
+</div>
+{% else %}<div class="empty">No 300s yet this season.</div>{% endif %}
+{% set items = collections.posts | byCategory("300 Club") %}{% set showPin = false %}
+{% if items.length %}<h2 class="sec">Photos &amp; stories</h2>{% include "postcards.njk" %}{% endif %}

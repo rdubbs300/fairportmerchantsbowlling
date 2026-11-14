@@ -1,0 +1,17 @@
+---
+layout: base.njk
+title: News
+---
+<h1 class="page-h">News &amp; stories</h1>
+<p class="page-sub">League announcements, stories and photos.</p>
+<div class="filters" id="filters">
+  <button class="on" data-c="">All</button>{% for c in ["News", "Story", "300 Club", "Sidepots", "Announcement"] %}{% if collections.posts | byCategory(c) | length %}<button data-c="{{ c }}">{{ c }}</button>{% endif %}{% endfor %}
+</div>
+{% set items = collections.posts %}{% set showPin = false %}
+{% if items.length %}{% include "postcards.njk" %}{% else %}<div class="empty">No posts yet.</div>{% endif %}
+<script>
+document.querySelectorAll('#filters button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#filters button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.post-card').forEach(c => c.style.display = !b.dataset.c || c.dataset.cat === b.dataset.c ? '' : 'none');
+});
+</script>

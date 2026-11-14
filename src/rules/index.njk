@@ -1,0 +1,10 @@
+---
+layout: base.njk
+title: League rules
+---
+<h1 class="page-h">{{ rules.title }}</h1>
+<div class="card" style="border-left:4px solid var(--red)"><b>{{ rules.lead }}</b></div>
+<div class="acc">
+{% for s in rules.sections %}<details{% if loop.first %} open{% endif %}><summary>{{ s.title }}</summary><ul>{% for x in s.items %}<li>{{ x }}</li>{% endfor %}</ul></details>
+{% endfor %}
+</div>

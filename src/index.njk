@@ -1,0 +1,38 @@
+---
+layout: base.njk
+---
+{% set L = league %}
+<h2 class="sec">Latest from the league</h2>
+{% set items = collections.posts | pinnedFirst | limit(3) %}{% set showPin = true %}
+{% if items.length %}{% include "postcards.njk" %}<a class="more" href="/news/">All news →</a>{% else %}<div class="empty">No posts yet.</div>{% endif %}
+
+<div class="home-grid" style="margin-top:18px">
+  <div>
+    <h2 class="sec">Standings <small>after week {{ L.meta.week }}</small></h2>
+    <div class="card flush"><table class="mini">
+      <thead><tr><th>#</th><th>Team</th><th class="n">Won</th><th class="n">Lost</th></tr></thead>
+      <tbody>
+      {% for s in L.standings | limit(8) %}<tr class="{% if s.pos == 1 %}lead1{% endif %}"><td class="pos">{{ s.pos }}</td><td class="team"><a class="tl" href="/stats/#team-{{ s.id }}">{{ L.teamnames[s.id] }}</a></td><td class="n"><b>{{ s.won | pts }}</b></td><td class="n">{{ s.lost | pts }}</td></tr>{% endfor %}
+      </tbody></table></div>
+    <a class="more" href="/stats/#standings">Full standings, results and leaders →</a>
+  </div>
+  <div>
+    <h2 class="sec">Week {{ L.meta.week }} leaders</h2>
+    <div class="card">
+      {% for c in L.leaders.week | limit(2) %}
+        <h3 class="sub">{{ c.title }}</h3>
+        <ol class="lb" style="margin-bottom:10px">
+        {% for x in c.s | limit(1) %}<li><span class="r">S</span><span class="nm"><a class="tl" href="/stats/#bowler-{{ x.n | slug2 }}">{{ x.n }}</a><small>{{ x.t }} · scratch</small></span><span class="v">{{ x.v }}</span></li>{% endfor %}
+        {% for x in c.h | limit(1) %}<li><span class="r">H</span><span class="nm"><a class="tl" href="/stats/#bowler-{{ x.n | slug2 }}">{{ x.n }}</a><small>{{ x.t }} · handicap</small></span><span class="v">{{ x.v }}</span></li>{% endfor %}
+        </ol>
+      {% endfor %}
+      <a class="more" href="/stats/#bowlers">Look up any bowler →</a>
+    </div>
+    <h2 class="sec">This season</h2>
+    <div class="tiles">
+      <div class="tile"><div class="k">League avg</div><div class="v">{{ L.insights.tiles.avg }}</div></div>
+      <div class="tile"><div class="k">200+ games</div><div class="v">{{ L.insights.tiles.c200 | comma }}</div></div>
+      <div class="tile red"><div class="k">300 games</div><div class="v">{{ L.insights.tiles.c300 }}</div></div>
+    </div>
+  </div>
+</div>

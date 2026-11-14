@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if title %}{{ title }} · {% endif %}{{ site.name }}</title>
+<meta name="description" content="{{ summary or (site.name + ' — ' + site.tagline) }}">
+<meta property="og:title" content="{{ title or site.name }}">
+<meta property="og:description" content="{{ summary or site.tagline }}">
+{% if image %}<meta property="og:image" content="{{ site.url }}{{ image }}">{% endif %}
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<header class="top"><div class="top-in">
+  <div class="brand"><h1><a href="/">{{ site.name }}</a></h1><p>{{ league.meta.season }} season · {{ league.meta.night }} nights · {{ league.meta.centre }}</p></div>
+  <div class="asof">Through <b>week {{ league.meta.week }}</b> · bowled {{ league.meta.bowled }}</div>
+</div></header>
+{% set navs = [["/", "Home", ""], ["/news/", "News", ""], ["/stats/#standings", "Standings", "standings"], ["/stats/#schedule", "Schedule", "schedule"], ["/stats/#bowlers", "Bowlers", "bowlers"], ["/stats/#teams", "Teams", "teams"], ["/stats/#insights", "Insights", "insights"], ["/300-club/", "300 Club", ""], ["/rules/", "Rules", ""], ["/links/", "Links", ""]] %}
+<nav class="tabs"><div class="tabs-in">
+{%- for n in navs %}
+  <a href="{{ n[0] }}"{% if n[2] %} data-k="{{ n[2] }}"{% endif %}{% if not n[2] and (page.url == n[0] or (n[0] == '/news/' and page.url.startsWith('/news/'))) %} class="on"{% endif %}>{{ n[1] }}</a>
+{%- endfor %}
+</div></nav>
+<main>
+{{ content | safe }}
+</main>
+{% if sponsors.length %}
+<div class="sponsors"><h2 class="sec" style="justify-content:center">Thanks to our sponsors</h2><div class="row">
+{% for s in sponsors %}{% if s.url %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a>{% else %}<a>{{ s.name }}</a>{% endif %}{% endfor %}
+</div></div>
+{% endif %}
+<footer>
+  <div class="foot-links"><a href="/news/">News</a><a href="/stats/#standings">Standings</a><a href="/rules/">League rules</a><a href="/links/">Links</a>{% if site.feedback_form %}<a href="/feedback/">Share feedback</a>{% endif %}</div>
+  <p>{{ site.name }} · USBC-sanctioned handicap league · {{ league.meta.centre }}, Fairport, NY. Stats are computed from the game scores under the {{ league.meta.season }} league rules and checked against the bowling centre's sheet each week. Updated {{ league.meta.updated }}.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,47 @@
+# Pages CMS editor settings (app.pagescms.org). Defines what you can post without touching code.
+media:
+  input: src/images/uploads
+  output: /images/uploads
+  categories: [image]
+
+content:
+  - name: posts
+    label: News, stories & photos
+    type: collection
+    path: src/posts
+    format: yaml-frontmatter
+    filename: "{year}-{month}-{day}-{primary}.md"
+    view:
+      fields: [title, date, category]
+      primary: title
+      sort: date
+      order: desc
+    fields:
+      - name: title
+        label: Headline
+        type: string
+        required: true
+      - name: date
+        label: Date
+        type: date
+        required: true
+      - name: category
+        label: Type of post
+        type: select
+        options:
+          values: [News, Story, 300 Club, Sidepots, Announcement]
+      - name: summary
+        label: One-line summary (shown on the home page)
+        type: text
+      - name: image
+        label: Photo (optional)
+        type: image
+      - name: image_alt
+        label: Photo description (who and what is in it)
+        type: string
+      - name: pinned
+        label: Pin to the top of the home page
+        type: boolean
+      - name: body
+        label: Story
+        type: rich-text

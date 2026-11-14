@@ -1,0 +1,12 @@
+<div class="posts">
+{% for p in items %}
+  <a class="post-card" href="{{ p.url }}" data-cat="{{ p.data.category }}">
+    {% if p.data.image %}<img src="{{ p.data.image }}" alt="{{ p.data.image_alt or p.data.title }}" loading="lazy">{% endif %}
+    <div class="pc">
+      <div class="meta-line">{% if p.data.pinned and showPin %}<span class="cat pin">Pinned</span>{% endif %}{% if p.data.category %}<span class="cat{% if p.data.category == '300 Club' %} c300{% endif %}">{{ p.data.category }}</span>{% endif %}{{ p.date | niceDate }}</div>
+      <h3>{{ p.data.title }}</h3>
+      {% if p.data.summary %}<p>{{ p.data.summary }}</p>{% endif %}
+    </div>
+  </a>
+{% endfor %}
+</div>

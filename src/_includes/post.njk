@@ -1,0 +1,10 @@
+---
+layout: base.njk
+---
+<a class="back" href="/news/">← All news</a>
+<article class="article">
+  <div class="meta-line">{% if category %}<span class="cat{% if category == '300 Club' %} c300{% endif %}">{{ category }}</span>{% endif %}{{ page.date | niceDate }}</div>
+  <h1>{{ title }}</h1>
+  {% if image %}<img class="hero" src="{{ image }}" alt="{{ image_alt or title }}">{% if image_alt %}<p class="cap">{{ image_alt }}</p>{% endif %}{% endif %}
+  <div class="body">{{ content | safe }}</div>
+</article>
