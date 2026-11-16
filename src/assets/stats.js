@@ -137,23 +137,24 @@ function bowlerPage(b){
   // lane pair split: this season, and since 2024-25 (b.lph holds 2024-25 + 2025-26; this season is added on top).
   // Games not bowled on the scheduled pair on league night and blind games are left out.
   const lp = {};
-  b.w.forEach(e => e.g.forEach((g,i) => { if (g==null || e.b[i] || !e.op[i]) return; const k = e.l; lp[k] = lp[k] || [0,0]; lp[k][0]++; lp[k][1]+=g; }));
+  b.w.forEach(e => e.g.forEach((g,i) => { if (g==null || e.b[i] || !e.op[i]) return; const k = e.l; lp[k] = lp[k] || [0,0,0]; lp[k][0]++; lp[k][1]+=g; lp[k][2]+=e.a; }));
   const hist = {};
   [b.lph || {}, lp].forEach(src => Object.entries(src).forEach(([k,[n,p]]) => { hist[k] = hist[k] || [0,0]; hist[k][0]+=n; hist[k][1]+=p; }));
   const pairs = Object.keys(hist).sort((x,y)=>parseInt(x)-parseInt(y));
   const bestOf = o => { let best = null; Object.entries(o).forEach(([k,[n,p]]) => { if (n >= 6 && (!best || p/n > best.a)) best = {k, a:p/n}; }); return best && best.k; };
   const bCur = bestOf(lp), bHist = bestOf(hist);
   const cell = (v, hi) => v ? `<td class="n">${v[0]}</td><td class="n">${hi ? '<b class="best">' : ''}${(v[1]/v[0]).toFixed(1)}${hi ? '</b>' : ''}</td>` : '<td class="n muted">–</td><td class="n muted">–</td>';
-  const lpRows = pairs.map(k => `<tr><td><b>${k}</b></td>${cell(lp[k], k===bCur)}${cell(hist[k], k===bHist).replace('<td class="n">','<td class="n sep">')}</tr>`).join('');
-  const sum = o => Object.values(o).reduce((a,[n,p]) => [a[0]+n, a[1]+p], [0,0]);
+  const vs = v => { if (!v) return '<td class="n muted">–</td>'; const d = (v[1]-v[2])/v[0]; return `<td class="n" style="color:${d>=0?'var(--good)':'var(--red)'}">${d>=0?'+':''}${d.toFixed(1)}</td>`; };
+  const lpRows = pairs.map(k => `<tr><td><b>${k}</b></td>${cell(lp[k], k===bCur)}${vs(lp[k])}${cell(hist[k], k===bHist).replace('<td class="n">','<td class="n sep">')}</tr>`).join('');
+  const sum = o => Object.values(o).reduce((a,[n,p,x]) => [a[0]+n, a[1]+p, a[2]+(x||0)], [0,0,0]);
   const sc = sum(lp), sh = sum(hist);
   const foot = (t, sep) => t[0] ? `<td class="n${sep?' sep':''}"><b>${t[0]}</b></td><td class="n"><b>${(t[1]/t[0]).toFixed(1)}</b></td>` : `<td class="n${sep?' sep':''} muted">–</td><td class="n muted">–</td>`;
   const lpHtml = lpRows ? `<h2 class="sec">By lane pair <small>this season, and every season since 2024-25</small></h2>
   <div class="card flush"><div class="scroll"><table class="lp">
-    <thead><tr><th rowspan="2">Pair</th><th class="n grp" colspan="2">${esc(M.season)}</th><th class="n grp sep" colspan="2">Since 2024-25</th></tr>
-    <tr><th class="n">Games</th><th class="n">Avg</th><th class="n sep">Games</th><th class="n">Avg</th></tr></thead>
-    <tbody>${lpRows}</tbody><tfoot><tr><td><b>All</b></td>${foot(sc)}${foot(sh, true)}</tr></tfoot></table></div></div>
-  <p class="note">"Since 2024-25" combines the 2024-25, 2025-26 and ${esc(M.season)} seasons. Only games bowled on the pair on league night count; blind games and pre-bowls are left out. <b class="best">Highlighted</b> = best pair (6+ games).</p>` : '';
+    <thead><tr><th rowspan="2">Pair</th><th class="n grp" colspan="3">${esc(M.season)}</th><th class="n grp sep" colspan="2">Since 2024-25</th></tr>
+    <tr><th class="n">Games</th><th class="n">Avg</th><th class="n" title="Pins per game over or under the average he bowled on">+/−</th><th class="n sep">Games</th><th class="n">Avg</th></tr></thead>
+    <tbody>${lpRows}</tbody><tfoot><tr><td><b>All</b></td>${foot(sc)}${sc[0] ? vs(sc).replace('<td class="n"','<td class="n" ') : '<td class="n muted">–</td>'}${foot(sh, true)}</tr></tfoot></table></div></div>
+  <p class="note">"Since 2024-25" combines the 2024-25, 2025-26 and ${esc(M.season)} seasons. +/− is pins per game over or under the average in force when he bowled them. Only games bowled on the pair on league night count; blind games and pre-bowls are left out. <b class="best">Highlighted</b> = best pair (6+ games).</p>` : '';
   return `${bowlerPicker(b.n)}
   <div class="ph"><div><h2>${esc(b.n)}${b.rt?'':'<span class="tag sub">SUB</span>'}</h2><p>${teamLine}</p></div></div>
   <div class="tiles">
