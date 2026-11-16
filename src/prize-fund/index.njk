@@ -37,7 +37,7 @@ summary: The 2026-27 Fairport Merchants prize fund — team standings, high game
     <div class="card flush"><div class="scroll"><table>
       <thead><tr><th>Category</th>{% for p in A.places %}<th class="n">{{ p }}</th>{% endfor %}</tr></thead>
       <tbody>{% for r in A.rows %}<tr><td class="team">{{ r[0] }}</td>{% for v in r.slice(1) %}<td class="n">{{ money(v) }}</td>{% endfor %}</tr>{% endfor %}
-      {% if A.three_hundred %}<tr><td class="team"><span class="cat c300">300</span>Scratch 300 games</td><td class="n" colspan="3"><b>{{ A.three_hundred }}</b></td></tr>{% endif %}
+      {% if A.three_hundred_pool %}<tr><td class="team"><span class="cat c300">300</span>Scratch 300 games</td><td class="n" colspan="3"><b>{{ money(A.three_hundred_pool) }} pool</b><br><span class="muted small">split evenly among all 300s</span></td></tr>{% endif %}
       </tbody></table></div></div>
     {% endfor %}
 

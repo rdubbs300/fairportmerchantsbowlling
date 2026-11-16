@@ -94,7 +94,7 @@
       ]
     ],
     "total": 255,
-    "three_hundred": "TBD — depends on the number of 300 games"
+    "three_hundred_pool": 150
   },
   "season_end": [
     {
@@ -190,7 +190,7 @@
       255
     ],
     [
-      "300 games (amount per game TBD)",
+      "300 games (shared pool)",
       150
     ],
     [
@@ -205,7 +205,7 @@
   "total": 28745,
   "notes": [
     "To qualify for individual prizes, a bowler must bowl two-thirds of the regular season's games (56 games).",
-    "Scratch 300 games: the amount per game is TBD and depends on how many 300s are bowled this season.",
+    "Scratch 300 games share a $150 pool: it is divided evenly among every 300 bowled in league play this season.",
     "The week 29 No Tap has its own prizes; the two teams bowling the championship match don't take part in it.",
     "Any 50/50 collection over $3,000 is raffled off to 50/50 participants on the last night, as in years past."
   ]
