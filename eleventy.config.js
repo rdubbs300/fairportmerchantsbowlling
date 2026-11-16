@@ -18,6 +18,7 @@ export default function (eleventyConfig) {
   eleventyConfig.addFilter("slug2", (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""));
   eleventyConfig.addFilter("pts", (v) => (Number.isInteger(v) ? String(v) : Number(v).toFixed(1)));
   eleventyConfig.addFilter("comma", (v) => Number(v).toLocaleString("en-US"));
+  eleventyConfig.addFilter("money2", (v) => Number(v).toFixed(2));
   eleventyConfig.addFilter("limit", (arr, n) => (arr || []).slice(0, n));
   eleventyConfig.addFilter("byCategory", (arr, c) => (arr || []).filter((p) => p.data.category === c));
   eleventyConfig.addFilter("pinnedFirst", (arr) => [...(arr || [])].sort((a, b) => (b.data.pinned ? 1 : 0) - (a.data.pinned ? 1 : 0) || b.date - a.date));

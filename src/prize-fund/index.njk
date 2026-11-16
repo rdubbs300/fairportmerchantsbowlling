@@ -1,0 +1,67 @@
+---
+layout: base.njk
+title: Prize Fund
+summary: The 2026-27 Fairport Merchants prize fund — team standings, high game and series awards, season-end awards and the No Tap.
+---
+{% set P = prizes %}
+{% macro money(v) %}${{ v | comma }}{% endmacro %}
+{% macro ordn(n) %}{{ n }}{% if n % 100 >= 11 and n % 100 <= 13 %}th{% elif n % 10 == 1 %}st{% elif n % 10 == 2 %}nd{% elif n % 10 == 3 %}rd{% else %}th{% endif %}{% endmacro %}
+<h1 class="page-h">Prize Fund</h1>
+<p class="page-sub">{{ P.season }} season · what every place and award pays.</p>
+
+<div class="tiles">
+  <div class="tile"><div class="k">Total prizes</div><div class="v">{{ money(P.total) }}</div><div class="s">across all categories</div></div>
+  <div class="tile"><div class="k">Team standings</div><div class="v">{{ money(P.team_standings.season) }}</div><div class="s">{{ money(P.team_standings.per_half) }} each half</div></div>
+  <div class="tile red"><div class="k">1st place</div><div class="v">{{ money(P.team_standings.places[0]) }}</div><div class="s">per half · {{ money(P.team_standings.places[0] / 4) }} a bowler</div></div>
+  <div class="tile"><div class="k">Every team</div><div class="v">{{ money(P.team_standings.places | last) }}+</div><div class="s">per half, 22nd place</div></div>
+</div>
+
+<div class="prize-grid">
+  <div>
+    <h2 class="sec">Team standings <small>paid each half</small></h2>
+    <div class="card flush"><table>
+      <thead><tr><th>Place</th><th class="n">Per team</th><th class="n">Per bowler</th></tr></thead>
+      <tbody>
+      {% for v in P.team_standings.places %}<tr class="{% if loop.first %}lead1{% endif %}"><td class="pos">{{ ordn(loop.index) }}</td><td class="n"><b>{{ money(v) }}</b></td><td class="n">${{ (v / 4) | money2 }}</td></tr>
+      {% endfor %}
+      </tbody>
+      <tfoot><tr><td><b>Each half</b></td><td class="n"><b>{{ money(P.team_standings.per_half) }}</b></td><td class="n muted">× 2 halves</td></tr>
+      <tr><td><b>Season</b></td><td class="n"><b>{{ money(P.team_standings.season) }}</b></td><td></td></tr></tfoot>
+    </table></div>
+    <p class="note">{{ P.team_standings.note }} Per bowler assumes a four-man team splitting evenly.</p>
+  </div>
+
+  <div>
+    {% for A in [P.team_awards, P.individual_awards] %}
+    <h2 class="sec">{{ A.title }} <small>{{ A.sub }} · {{ money(A.total) }}</small></h2>
+    <div class="card flush"><div class="scroll"><table>
+      <thead><tr><th>Category</th>{% for p in A.places %}<th class="n">{{ p }}</th>{% endfor %}</tr></thead>
+      <tbody>{% for r in A.rows %}<tr><td class="team">{{ r[0] }}</td>{% for v in r.slice(1) %}<td class="n">{{ money(v) }}</td>{% endfor %}</tr>{% endfor %}
+      {% if A.three_hundred %}<tr><td class="team"><span class="cat c300">300</span>Scratch 300 games</td><td class="n" colspan="3"><b>{{ A.three_hundred }}</b></td></tr>{% endif %}
+      </tbody></table></div></div>
+    {% endfor %}
+
+    <h2 class="sec">At a glance</h2>
+    <div class="card flush"><table>
+      <tbody>{% for r in P.summary %}<tr><td class="team">{{ r[0] }}</td><td class="n">{{ money(r[1]) }}</td></tr>{% endfor %}</tbody>
+      <tfoot><tr><td><b>Total prizes</b></td><td class="n"><b>{{ money(P.total) }}</b></td></tr></tfoot>
+    </table></div>
+  </div>
+</div>
+
+<h2 class="sec">Season-end awards</h2>
+<div class="se-grid">
+{% for a in P.season_end %}
+  <div class="card">
+    <h3 class="sub">{{ a.name }}</h3>
+    <p class="muted small" style="margin:-4px 0 8px">{{ a.detail }} · {{ money(a.total) }}</p>
+    <ol class="lb">{% for v in a.amounts %}<li><span class="nm">{% if a.labels %}{{ a.labels[loop.index0] }}{% else %}{{ ordn(loop.index) }} place{% endif %}</span><span class="v">{{ money(v) }}</span></li>{% endfor %}</ol>
+  </div>
+{% endfor %}
+</div>
+
+<div class="card" style="border-left:4px solid var(--red);margin-top:6px">
+  <h3 class="sub">Good to know</h3>
+  <ul style="margin:0;padding-left:20px">{% for n in P.notes %}<li style="margin-bottom:6px">{{ n }}</li>{% endfor %}</ul>
+  <p class="note" style="margin-top:8px">How the high game and series lists are decided is under <a href="/rules/">League rules</a> and on the <a href="/stats/#standings">Standings</a> page.</p>
+</div>

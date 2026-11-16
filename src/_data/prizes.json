@@ -1,0 +1,212 @@
+{
+  "season": "2026-27",
+  "team_standings": {
+    "note": "Paid each half — first half (weeks 1–14) and second half (weeks 15–28).",
+    "places": [
+      900,
+      800,
+      720,
+      680,
+      660,
+      640,
+      620,
+      600,
+      580,
+      570,
+      550,
+      530,
+      510,
+      500,
+      490,
+      480,
+      470,
+      460,
+      450,
+      440,
+      430,
+      420
+    ],
+    "per_half": 12500,
+    "season": 25000
+  },
+  "team_awards": {
+    "title": "Team awards",
+    "sub": "Season highs",
+    "places": [
+      "1st",
+      "2nd",
+      "3rd"
+    ],
+    "rows": [
+      [
+        "Team scratch series",
+        160,
+        100,
+        80
+      ],
+      [
+        "Team scratch game",
+        160,
+        100,
+        80
+      ],
+      [
+        "Team handicap series",
+        160,
+        100,
+        80
+      ],
+      [
+        "Team handicap game",
+        160,
+        100,
+        80
+      ]
+    ],
+    "total": 1360
+  },
+  "individual_awards": {
+    "title": "Individual awards",
+    "sub": "Season highs",
+    "places": [
+      "1st",
+      "2nd",
+      "3rd"
+    ],
+    "rows": [
+      [
+        "Individual handicap series",
+        40,
+        25,
+        20
+      ],
+      [
+        "Individual handicap game",
+        40,
+        25,
+        20
+      ],
+      [
+        "Individual scratch series",
+        40,
+        25,
+        20
+      ]
+    ],
+    "total": 255,
+    "three_hundred": "TBD — depends on the number of 300 games"
+  },
+  "season_end": [
+    {
+      "name": "Individual average",
+      "detail": "Top 9",
+      "amounts": [
+        75,
+        60,
+        50,
+        40,
+        30,
+        25,
+        20,
+        15,
+        10
+      ],
+      "total": 325
+    },
+    {
+      "name": "Individual match points",
+      "detail": "Top 9",
+      "amounts": [
+        75,
+        60,
+        50,
+        40,
+        30,
+        25,
+        20,
+        15,
+        10
+      ],
+      "total": 325
+    },
+    {
+      "name": "Championship match",
+      "detail": "Week 29",
+      "labels": [
+        "Winner",
+        "Runner-up"
+      ],
+      "amounts": [
+        280,
+        120
+      ],
+      "total": 400
+    },
+    {
+      "name": "No Tap (last night) — team",
+      "detail": "Top 5",
+      "amounts": [
+        200,
+        160,
+        120,
+        80,
+        40
+      ],
+      "total": 600
+    },
+    {
+      "name": "No Tap (last night) — individual",
+      "detail": "Top 10",
+      "amounts": [
+        60,
+        50,
+        45,
+        40,
+        35,
+        30,
+        25,
+        20,
+        15,
+        10
+      ],
+      "total": 330
+    }
+  ],
+  "summary": [
+    [
+      "Team standings (both halves)",
+      25000
+    ],
+    [
+      "Championship match",
+      400
+    ],
+    [
+      "Team high game & series awards",
+      1360
+    ],
+    [
+      "Individual high game & series awards",
+      255
+    ],
+    [
+      "300 games (amount per game TBD)",
+      150
+    ],
+    [
+      "Individual average & match points",
+      650
+    ],
+    [
+      "No Tap (last night)",
+      930
+    ]
+  ],
+  "total": 28745,
+  "notes": [
+    "To qualify for individual prizes, a bowler must bowl two-thirds of the regular season's games (56 games).",
+    "Scratch 300 games: the amount per game is TBD and depends on how many 300s are bowled this season.",
+    "The week 29 No Tap has its own prizes; the two teams bowling the championship match don't take part in it.",
+    "Any 50/50 collection over $3,000 is raffled off to 50/50 participants on the last night, as in years past."
+  ]
+}
