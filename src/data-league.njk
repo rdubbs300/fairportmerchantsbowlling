@@ -2,4 +2,4 @@
 permalink: /data/league.json
 eleventyExcludeFromCollections: true
 ---
-{{ league | withSchedule(schedule_set) | dump | safe }}
+{{ league | withSchedule(schedule_set) | withHistory(lane_history) | dump | safe }}

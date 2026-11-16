@@ -163,3 +163,7 @@ footer{max-width:1080px;margin:0 auto;padding:18px 16px 30px;color:var(--ink-3);
 tfoot td{border-top:2px solid var(--navy);background:#F7F8FB}
 .se-grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));align-items:start}
 .se-grid .card{margin-bottom:0}
+table.lp th.grp{text-align:center;color:var(--navy);border-bottom:1px solid var(--line);padding-bottom:4px}
+table.lp th[rowspan]{vertical-align:bottom}
+table.lp .sep{border-left:1px solid var(--line)}
+b.best{background:#FFF1CC;padding:1px 5px;border-radius:4px}

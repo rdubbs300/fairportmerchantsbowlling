@@ -5,6 +5,12 @@ export default function (eleventyConfig) {
   // /data/league.json is built by src/data-league.njk: the weekly stats plus any lane draws entered in schedule_set.json
 
   // Fill upcoming regular weeks from schedule_set.json; weeks already in the recap/centre data are left alone.
+  // Attach each bowler's 2024-25 + 2025-26 lane-pair history (lane_history.json) to the stats data
+  eleventyConfig.addFilter("withHistory", (league, hist) => {
+    const H = (hist && hist.bowlers) || {};
+    for (const b of league.bowlers) if (H[b.n]) b.lph = H[b.n];
+    return league;
+  });
   eleventyConfig.addFilter("withSchedule", (league, set) => {
     const out = JSON.parse(JSON.stringify(league));
     const weeks = (set && set.weeks) || {};
