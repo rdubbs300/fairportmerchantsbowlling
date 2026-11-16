@@ -2,7 +2,21 @@ export default function (eleventyConfig) {
   // Files copied to the site as-is
   eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
   eleventyConfig.addPassthroughCopy({ "src/images": "images" });
-  eleventyConfig.addPassthroughCopy({ "src/_data/league.json": "data/league.json" });
+  // /data/league.json is built by src/data-league.njk: the weekly stats plus any lane draws entered in schedule_set.json
+
+  // Fill upcoming regular weeks from schedule_set.json; weeks already in the recap/centre data are left alone.
+  eleventyConfig.addFilter("withSchedule", (league, set) => {
+    const out = JSON.parse(JSON.stringify(league));
+    const weeks = (set && set.weeks) || {};
+    for (const row of out.schedule) {
+      const pairs = weeks[String(row.wk)];
+      if (!pairs || row.st === "done" || row.st === "set") continue;
+      row.m = pairs.map(([a, b], i) => ({ l: `${3 + 2 * i}-${4 + 2 * i}`, a, b }));
+      row.st = "set";
+      delete row.pp;
+    }
+    return out;
+  });
 
   // News, stories and photo posts (newest first; pinned posts lead on the home page)
   eleventyConfig.addCollection("posts", (api) =>

@@ -77,7 +77,7 @@ function viewSchedule(){
   return `<h2 class="sec">Schedule <small>${M.season} · ${M.night}s · practice 6:30 PM, competition 6:40 PM</small></h2>
   <div class="card" style="padding:10px"><select class="pick" id="myteam" aria-label="Highlight a team">${opts}</select></div>
   <div id="schedlist"></div>
-  <p class="note">No bowling November 26, December 24 or December 31. Team points reset for the second half on week 15. Position-round pairings are set by the standings the week before; the lane rotation is fixed in advance. Matchups after week 14 will appear here once the centre publishes them.</p>`;
+  <p class="note">No bowling November 26, December 24 or December 31. Team points reset for the second half on week 15. Position-round pairings are set by the standings the week before; the lane rotation is fixed in advance. Later weeks are added as the schedule is posted.</p>`;
 }
 function drawSchedule(){
   const my = $('#myteam').value; store.set('mt', my);
