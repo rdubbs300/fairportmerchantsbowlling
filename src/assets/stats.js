@@ -171,6 +171,7 @@ function bowlerPage(b){
     <thead><tr><th class="n">Wk</th><th>Opponent team</th><th class="n">Lanes</th><th class="n">G1</th><th class="n">G2</th><th class="n">G3</th><th class="n">Series</th><th class="n hide-sm">Hdcp ser</th><th class="n">Avg</th><th class="n hide-sm">Hdcp</th><th class="n">Pts</th><th>Bowled against</th></tr></thead>
     <tbody>${rows}</tbody></table></div></div>
   <p class="note"><span class="b-mark">b</span> = blind score (not counted in average). Avg and Hdcp are what he bowled on that night. Pts are individual points: one per game and one for the series.</p>
+  ${bowlerGameAvg(b)}
   ` : '<div class="card muted">No games bowled yet this season.</div>'}
   ${lpHtml}`;
 }
@@ -188,6 +189,43 @@ function weekChart(b){
   s += `<polyline points="${ap}" fill="none" stroke="#C0282D" stroke-width="2.5"/>`;
   for (let w = 1; w <= n; w++) s += `<text x="${x(w)}" y="${Hh-7}" font-size="11" text-anchor="middle" fill="#7A8496">${w}</text>`;
   return s + '</svg>';
+}
+
+/* ---------------- GAME 1 / 2 / 3 AVERAGES ---------------- */
+// rows: [{label, v:[[n,pins],[n,pins],[n,pins]], d:[diff sums]|null}] -> table with Game 1, Game 2, Game 3, All; best game in bold
+function gameAvgTable(rows, title, sub){
+  const f = v => v[0] ? (v[1]/v[0]).toFixed(1) : '–';
+  const body = rows.map(r => {
+    const tot = r.v.reduce((a,v)=>[a[0]+v[0], a[1]+v[1]], [0,0]);
+    const avgs = r.v.map(v => v[0] ? v[1]/v[0] : null), mx = Math.max(...avgs.filter(a=>a!=null));
+    const cells = r.v.map((v,i) => `<td class="n">${avgs[i]!=null && avgs[i]===mx && r.best!==false ? '<b class="best">'+f(v)+'</b>' : f(v)}${r.cnt ? '<span class="b-mark">'+v[0]+'g</span>' : ''}</td>`).join('');
+    return `<tr><td>${r.label}</td>${cells}<td class="n sep"><b>${f(tot)}</b>${r.cnt ? '<span class="b-mark">'+tot[0]+'g</span>' : ''}</td></tr>`;
+  }).join('');
+  return `<h2 class="sec">${title} <small>${sub}</small></h2>
+  <div class="card flush"><div class="scroll"><table class="ga">
+    <thead><tr><th></th><th class="n">Game 1</th><th class="n">Game 2</th><th class="n">Game 3</th><th class="n sep">All games</th></tr></thead>
+    <tbody>${body}</tbody></table></div></div>`;
+}
+function bowlerGameAvg(b){
+  const v = [[0,0],[0,0],[0,0]], a = [[0,0],[0,0],[0,0]];
+  b.w.forEach(e => e.g.forEach((g,i) => { if (g==null || e.b[i]) return; v[i][0]++; v[i][1]+=g; a[i][0]++; a[i][1]+=g-e.a; }));
+  if (!v.some(x => x[0])) return '';
+  const fd = x => { if (!x[0]) return '–'; const d = x[1]/x[0]; return `<span style="color:${d>=0?'var(--good)':'var(--red)'}">${d>=0?'+':''}${d.toFixed(1)}</span>`; };
+  const tot = a.reduce((s,x)=>[s[0]+x[0], s[1]+x[1]], [0,0]);
+  const vsRow = `<tr><td>vs avg in force</td>${a.map(x=>`<td class="n">${fd(x)}</td>`).join('')}<td class="n sep"><b>${fd(tot)}</b></td></tr>`;
+  return gameAvgTable([{label:'Scratch average', v, cnt:true}], 'Average by game', 'game 1, game 2 and game 3 this season')
+    .replace('</tbody>', vsRow + '</tbody>') +
+  `<p class="note">Blind scores are left out. +/− is pins per game over or under the average he bowled on. <b class="best">Highlighted</b> = his best game on average.</p>`;
+}
+function teamGameAvg(t){
+  if (!t.w.length) return '';
+  const s = [[0,0],[0,0],[0,0]], h = [[0,0],[0,0],[0,0]];
+  t.w.forEach(e => { for (let i=0;i<3;i++){ s[i][0]++; s[i][1]+=e.gs[i]; h[i][0]++; h[i][1]+=e.gh[i]; } });
+  // individual bowlers' scratch average by game, for games bowled for this team (blinds left out)
+  const b = [[0,0],[0,0],[0,0]];
+  D.bowlers.forEach(x => x.w.forEach(e => { if (e.t !== t.id) return; e.g.forEach((g,i) => { if (g==null || e.b[i]) return; b[i][0]++; b[i][1]+=g; }); }));
+  return gameAvgTable([{label:'Team scratch', v:s}, {label:'Team handicap', v:h}, {label:'Per bowler (scratch)', v:b}], 'Average by game', 'game 1, game 2 and game 3 this season') +
+  `<p class="note">Team rows are the team's game totals (blind scores included, as they count in the match); the per-bowler row leaves blinds out. <b class="best">Highlighted</b> = the best game in each row.</p>`;
 }
 
 /* ---------------- TEAMS ---------------- */
@@ -223,6 +261,7 @@ function teamPage(t){
     <thead><tr><th class="n">Wk</th><th>Opponent</th><th class="n">Lanes</th><th class="n">G1</th><th class="n">G2</th><th class="n">G3</th><th class="n">Hdcp ser</th><th class="n hide-sm">Scratch</th><th class="n">Pts</th><th class="n hide-sm">Total</th></tr></thead>
     <tbody>${rows}</tbody></table></div></div>
   <p class="note">Game columns are team handicap scores.</p>
+  ${teamGameAvg(t)}
   <h2 class="sec">Roster</h2>
   <div class="card flush"><div class="scroll"><table>
     <thead><tr><th>Bowler</th><th class="n">Avg</th><th class="n">Next avg</th><th class="n">Hdcp</th><th class="n">Games</th><th class="n">Pts</th><th class="n hide-sm">HG</th><th class="n hide-sm">HS</th></tr></thead>
@@ -242,6 +281,20 @@ function teamChart(t){
   return s + '</svg>';
 }
 
+
+function lanes12Html(x){
+  if (!x) return '';
+  const sg = d => `<span style="color:${d>=0?'var(--good)':'var(--red)'}"><b>${d>=0?'+':''}${d.toFixed(1)}</b></span>`;
+  const gtxt = g => g.length === 3 ? 'All 3 games' : 'Games ' + g.join('-');
+  const rows = x.nights.map(n => `<tr><td class="n"><b>${n.wk}</b></td><td>${tlink(n.a)} v ${tlink(n.b)}</td><td class="n">${n.sched}</td><td>${gtxt(n.g)}</td><td class="n">${n.n}</td><td class="n">${n.act.toFixed(1)}</td><td class="n">${n.exp.toFixed(1)}</td><td class="n">${sg(n.act - n.exp)}</td></tr>`).join('');
+  return `<h2 class="sec">Lanes 1-2 <small>matches moved off their scheduled pair</small></h2>
+  <div class="card flush"><div class="scroll"><table>
+    <thead><tr><th class="n">Wk</th><th>Match</th><th class="n">Scheduled</th><th>On 1-2</th><th class="n">Games</th><th class="n">Avg</th><th class="n">Expected</th><th class="n">+/−</th></tr></thead>
+    <tbody>${rows}</tbody>
+    <tfoot><tr><td></td><td><b>All games on 1-2</b></td><td></td><td class="muted">high ${x.hi} · low ${x.lo}</td><td class="n"><b>${x.n}</b></td><td class="n"><b>${x.act.toFixed(1)}</b></td><td class="n"><b>${x.exp.toFixed(1)}</b></td><td class="n">${sg(x.d)}</td></tr></tfoot>
+  </table></div></div>
+  <p class="note">Lanes 1-2 are not on the league schedule; these are the games bowled there after a match was moved off its pair. Expected uses each bowler's average in force. The week 9 match moved during game 1 (after frame 7), so that game was split between pairs and is left out here and from 11-12. ${x.blinds ? x.blinds + ' blind scores are left out. ' : ''}A small sample — read it as a curiosity, not a verdict on the pair.</p>`;
+}
 /* ---------------- INSIGHTS ---------------- */
 function viewInsights(){
   const I = D.insights, T = I.tiles;
@@ -263,7 +316,8 @@ function viewInsights(){
 
   <h2 class="sec">Lane pairs <small>${comma(I.lane_tot.n)} games</small></h2>
   <div class="card flush"><div class="scroll"><table><thead><tr><th>Pair</th><th class="n">Games</th><th class="n">Avg</th><th class="n">Expected</th><th class="n">+/−</th><th></th><th class="n hide-sm">High</th></tr></thead><tbody>${lanes}</tbody></table></div></div>
-  <p class="note">Expected uses the averages in force of whoever bowled the pair, so a pair doesn't look strong just because strong teams drew it. Games not bowled on the scheduled pair on league night (moved matches, pre-bowls) are left out. ${odds ? `Shuffling whole team-nights between pairs produces a spread this wide about 1 time in ${odds}, so treat the differences as ${I.pval < 0.05 ? 'probably real' : 'suggestive, not proven'}.` : ''}</p>
+  <p class="note">Expected uses the averages in force of whoever bowled the pair, so a pair doesn't look strong just because strong teams drew it. Games not bowled on the scheduled pair on league night (moved matches, pre-bowls) are left out; games moved to lanes 1-2 are shown separately below. ${odds ? `Shuffling whole team-nights between pairs produces a spread this wide about 1 time in ${odds}, so treat the differences as ${I.pval < 0.05 ? 'probably real' : 'suggestive, not proven'}.` : ''}</p>
+  ${lanes12Html(I.lanes12)}
 
   <div class="grid g2" style="margin-top:12px">
     <div class="card"><h3 class="sub">Over average · week ${M.week}</h3>
